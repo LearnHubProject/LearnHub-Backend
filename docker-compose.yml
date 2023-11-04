@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  database:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
+      MYSQL_DATABASE: LearnHubDatabase
+      MYSQL_USER: learnhub
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - ./data/database:/var/lib/mysql
+    ports:
+      - "3306:3306"
+  learhub:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
