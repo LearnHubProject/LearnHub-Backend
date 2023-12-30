@@ -34,10 +34,7 @@ public class SchoolMember {
 
     public SchoolMember() {
     }
-
-    public SchoolMember(String something) {
-        this.something = something;
-    }
+    
 
     public void setSchool(School school) {
         this.school = school;
