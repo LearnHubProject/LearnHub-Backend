@@ -22,6 +22,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'mysql:mysql-connector-java:8.0.33'
 	implementation 'com.auth0:java-jwt:4.4.0'
+	implementation 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 }
@@ -30,7 +31,14 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
+test {
+	environment "DOMAIN", "learnhub.example"
+	environment "JWT_SECRET", "jwt-s3cr3t"
+	jvmArgs "-Dspring.profiles.active=test,debug"
+}
+
 bootJar{
 	archiveBaseName = 'LearnHub-Backend'
 	archiveVersion = ''
+
 }

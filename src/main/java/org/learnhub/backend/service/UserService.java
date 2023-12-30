@@ -1,11 +1,13 @@
 package org.learnhub.backend.service;
 
 import jakarta.transaction.Transactional;
-import org.learnhub.backend.exceptions.UserAlreadyExistAuthenticationException;
+import org.learnhub.backend.data.dto.UserDetailsDTO;
+import org.learnhub.backend.data.mapper.UserMapper;
 import org.learnhub.backend.database.entity.UserAccount;
 import org.learnhub.backend.database.entity.UserCredentials;
 import org.learnhub.backend.database.repostitory.UserAccountsRepository;
 import org.learnhub.backend.database.repostitory.UserCredentialsRepository;
+import org.learnhub.backend.exceptions.UserAlreadyExistAuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,13 +44,11 @@ public class UserService {
         return userCredentialsRepository.findById(userAccount.id).get();
     }
 
-    public UserAccount getUserAccountByEmail(String email){
-        UserAccount userAccount = userAccountsRepository.findByEmail(email);
-        return userAccount;
+    public UserDetailsDTO getUserAccountByEmail(String email){
+        return UserMapper.UserAccountToUserDetails(userAccountsRepository.findByEmail(email));
     }
 
-    public UserAccount getUserAccountById(Long id){
-
-        return userAccountsRepository.findById(id).get();
+    public UserDetailsDTO getUserAccountById(Long id){
+        return UserMapper.UserAccountToUserDetails(userAccountsRepository.findById(id).get());
     }
 }

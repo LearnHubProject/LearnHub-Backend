@@ -1,10 +1,5 @@
 package org.learnhub.backend.data.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
 public class SchoolDetailsDTO {
 
     Long id;

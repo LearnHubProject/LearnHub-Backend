@@ -1,11 +1,13 @@
 package org.learnhub.backend.controller;
 
+import org.learnhub.backend.api.payload.request.LoginRequest;
+import org.learnhub.backend.api.payload.request.RegisterRequest;
+import org.learnhub.backend.api.payload.response.AuthenticationResponse;
+import org.learnhub.backend.database.entity.UserAccount;
+import org.learnhub.backend.database.repostitory.UserCredentialsRepository;
 import org.learnhub.backend.exceptions.UserAlreadyExistAuthenticationException;
 import org.learnhub.backend.misc.payloads.GenericFailureMessageResponse;
 import org.learnhub.backend.misc.payloads.ResponsePayload;
-import org.learnhub.backend.database.entity.UserAccount;
-import org.learnhub.backend.api.payload.response.AuthenticationResponse;
-import org.learnhub.backend.database.repostitory.UserCredentialsRepository;
 import org.learnhub.backend.service.UserService;
 import org.learnhub.backend.util.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AuthenticationController {
@@ -29,15 +34,16 @@ public class AuthenticationController {
 
     @Autowired
     JWTUtils jwtUtils;
-    
+
+    @Autowired
     UserService userService;
 
-    @GetMapping("/login")
-    public ResponseEntity<ResponsePayload> authenticate(@RequestParam String email, @RequestParam String password){
+    @PostMapping("/api/login")
+    public ResponseEntity<ResponsePayload> authenticate(@RequestBody LoginRequest loginRequest){
 
         Authentication authentication;
         try {
-            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         }
         catch (BadCredentialsException e){
             GenericFailureMessageResponse authenticationResponse = new GenericFailureMessageResponse("Wrong credentials!");
@@ -51,15 +57,15 @@ public class AuthenticationController {
 
         String role = authentication.getAuthorities().toArray()[0].toString();
 
-        AuthenticationResponse authenticationResponse = new AuthenticationResponse(jwtUtils.generateToken(email, role));
+        AuthenticationResponse authenticationResponse = new AuthenticationResponse(jwtUtils.generateToken(loginRequest.getEmail(), role));
         return ResponseEntity.status(HttpStatus.OK).body(authenticationResponse);
     }
 
-    @GetMapping("/register")
-    public ResponseEntity<ResponsePayload> register(@RequestParam String email, @RequestParam String password){
+    @GetMapping("/api/register")
+    public ResponseEntity<ResponsePayload> register(@RequestBody RegisterRequest registerRequest){
 
         try {
-            UserAccount account = userService.createUser(email, password, "USER");
+            UserAccount account = userService.createUser(registerRequest.getEmail(), registerRequest.getPassword(), "USER");
         }
         catch (UserAlreadyExistAuthenticationException e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericFailureMessageResponse("Account with this email already exists!"));
@@ -68,7 +74,7 @@ public class AuthenticationController {
         //Try to log in to check the account
         boolean isAuthenticated;
         try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(registerRequest.getEmail(), registerRequest.getPassword()));
             isAuthenticated = authentication.isAuthenticated();
         }
         catch (AuthenticationException e){
@@ -78,7 +84,7 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
-        AuthenticationResponse authenticationResponse = new AuthenticationResponse(jwtUtils.generateToken(email, "USER"));
+        AuthenticationResponse authenticationResponse = new AuthenticationResponse(jwtUtils.generateToken(registerRequest.getEmail(), "USER"));
 
         return ResponseEntity.status(HttpStatus.OK).body(authenticationResponse);
     }

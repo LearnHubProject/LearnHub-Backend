@@ -1,6 +1,9 @@
 package org.learnhub.backend.database.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
 
 
 @Entity
@@ -16,7 +19,7 @@ public class UserCredentials {
     private String password;
     private String role;
 
-    protected UserCredentials(){};
+    protected UserCredentials(){}
     public UserCredentials(UserAccount user, String password, String role) {
         this.user = user;
         this.password = password;
