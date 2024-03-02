@@ -10,12 +10,16 @@ public class RegisterRequest {
     @JsonProperty
     String password;
 
+    @JsonProperty("personalCode")
+    Long personalCode;
+
     public RegisterRequest() {
     }
 
-    public RegisterRequest(String email, String password) {
+    public RegisterRequest(String email, String password, Long personalCode) {
         this.email = email;
         this.password = password;
+        this.personalCode = personalCode;
     }
 
     public String getEmail() {
@@ -24,5 +28,9 @@ public class RegisterRequest {
 
     public String getPassword() {
         return password;
+    }
+
+    public Long getPersonalCode() {
+        return personalCode;
     }
 }

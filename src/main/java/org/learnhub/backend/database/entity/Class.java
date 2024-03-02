@@ -1,5 +1,6 @@
 package org.learnhub.backend.database.entity;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -12,10 +13,15 @@ public class Class {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
+
+    @ManyToOne
+    School school;
+
     @Column
     String label;
 
-    @OneToOne
+    @ManyToOne
+    @Nullable
     SchoolMember teacher;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "aClass", cascade = CascadeType.ALL)
@@ -23,6 +29,10 @@ public class Class {
 
 
     public Class() {
+    }
+
+    public void setSchool(School school) {
+        this.school = school;
     }
 
     public void setLabel(String label) {
@@ -35,6 +45,14 @@ public class Class {
 
     public void setStudents(Set<ClassMember> students) {
         this.students = students;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public School getSchool() {
+        return school;
     }
 
     public String getLabel() {

@@ -10,18 +10,22 @@ public class UserAccount {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long id;
+    Long id;
 
     @Column(unique = true)
-    public String email;
+    String email;
+
+    @Column(name = "personal_code",nullable = false)
+    Long personalCode;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     Set<SchoolMember> members;
     //more details to come
 
     protected UserAccount(){}
-    public UserAccount(String email) {
+    public UserAccount(String email, Long personalCode) {
         this.email = email;
+        this.personalCode = personalCode;
     }
 
     public Long getId() {
@@ -34,5 +38,9 @@ public class UserAccount {
 
     public Set<SchoolMember> getMembers() {
         return members;
+    }
+
+    public Long getPersonalCode() {
+        return personalCode;
     }
 }

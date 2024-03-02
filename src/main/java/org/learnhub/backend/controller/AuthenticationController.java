@@ -1,5 +1,6 @@
 package org.learnhub.backend.controller;
 
+import jakarta.transaction.Transactional;
 import org.learnhub.backend.api.payload.request.LoginRequest;
 import org.learnhub.backend.api.payload.request.RegisterRequest;
 import org.learnhub.backend.api.payload.response.AuthenticationResponse;
@@ -8,9 +9,11 @@ import org.learnhub.backend.database.repostitory.UserCredentialsRepository;
 import org.learnhub.backend.exceptions.UserAlreadyExistAuthenticationException;
 import org.learnhub.backend.misc.payloads.GenericFailureMessageResponse;
 import org.learnhub.backend.misc.payloads.ResponsePayload;
+import org.learnhub.backend.service.SchoolService;
 import org.learnhub.backend.service.UserService;
 import org.learnhub.backend.util.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,6 +41,12 @@ public class AuthenticationController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    SchoolService schoolService;
+
+    @Value("${application.multi-school-enabled}")
+    boolean multiSchoolEnabled;
+
     @PostMapping("/api/login")
     public ResponseEntity<ResponsePayload> authenticate(@RequestBody LoginRequest loginRequest){
 
@@ -62,10 +71,14 @@ public class AuthenticationController {
     }
 
     @GetMapping("/api/register")
+    @Transactional
     public ResponseEntity<ResponsePayload> register(@RequestBody RegisterRequest registerRequest){
 
+
+        UserAccount account;
+
         try {
-            UserAccount account = userService.createUser(registerRequest.getEmail(), registerRequest.getPassword(), "USER");
+            account = userService.createUser(registerRequest.getEmail(), registerRequest.getPassword(), registerRequest.getPersonalCode(), "USER");
         }
         catch (UserAlreadyExistAuthenticationException e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericFailureMessageResponse("Account with this email already exists!"));
@@ -82,6 +95,10 @@ public class AuthenticationController {
         }
         if(!isAuthenticated){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        if(!multiSchoolEnabled){
+            schoolService.createJoinRequest(null,account.getId());
         }
 
         AuthenticationResponse authenticationResponse = new AuthenticationResponse(jwtUtils.generateToken(registerRequest.getEmail(), "USER"));

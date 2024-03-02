@@ -24,8 +24,11 @@ public class SchoolMember {
     @OneToMany(mappedBy = "schoolMember", cascade = CascadeType.ALL)
     Set<ClassMember> classMembers;
 
+    @Column(name = "personal_code",nullable = false)
+    Long personalCode;
+
     @ManyToOne
-    @JoinColumn(name = "user_account_id", nullable = false)
+    @JoinColumn(name = "user_account_id", nullable = true)
     UserAccount account;
 
     public Set<ClassMember> getClassMembers() {
@@ -34,7 +37,7 @@ public class SchoolMember {
 
     public SchoolMember() {
     }
-    
+
 
     public void setSchool(School school) {
         this.school = school;
@@ -46,6 +49,15 @@ public class SchoolMember {
 
     public void setRole(SchoolRole role) {
         this.role = role;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+
+    public Long getPersonalCode() {
+        return personalCode;
     }
 
     public SchoolRole getRole() {

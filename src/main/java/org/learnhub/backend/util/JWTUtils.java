@@ -21,7 +21,6 @@ public class JWTUtils {
     private JWTVerifier verifier;
 
     public JWTUtils( @Value("${jwt.secret}") String secret, @Value("${jwt.expiration}") Long expirationTime){
-        System.out.println(secret);
         this.secret = secret;
         this.expirationTime = expirationTime;
         algorithm = Algorithm.HMAC512(secret);

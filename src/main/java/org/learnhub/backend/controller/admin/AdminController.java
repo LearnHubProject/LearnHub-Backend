@@ -35,7 +35,7 @@ public class AdminController {
 
     @PostMapping("/school/list")
     public ResponseEntity<ResponsePayload> listSchools(Authentication authentication){
-        ListSchoolsResponse response = new ListSchoolsResponse(schoolService.listSchools());
+        ListSchoolsResponse response = new ListSchoolsResponse(schoolService.listSchools().stream().map(schoolDetailsDTO -> new ListSchoolsResponse.School(schoolDetailsDTO.getId(), schoolDetailsDTO.getName())).toList());
         return ResponseEntity.ok().body(response);
     }
 

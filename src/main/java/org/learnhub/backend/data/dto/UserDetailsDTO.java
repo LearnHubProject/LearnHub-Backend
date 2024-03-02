@@ -6,9 +6,12 @@ public class UserDetailsDTO {
 
     String email;
 
-    public UserDetailsDTO(Long id, String email) {
+    Long personalCode;
+
+    public UserDetailsDTO(Long id, String email, Long personalCode) {
         this.id = id;
         this.email = email;
+        this.personalCode = personalCode;
     }
 
     public Long getId() {
@@ -17,5 +20,9 @@ public class UserDetailsDTO {
 
     public String getEmail() {
         return email;
+    }
+
+    public Long getPersonalCode() {
+        return personalCode;
     }
 }

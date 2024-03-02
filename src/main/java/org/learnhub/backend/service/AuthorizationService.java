@@ -30,6 +30,12 @@ public class AuthorizationService {
         return true;
     }
 
+    public boolean checkSchoolMemberBelonging(Long schoolMemberId, Long schoolId){
+        Optional<SchoolMemberDTO> schoolMemberDTO = schoolService.getSchoolMemberById(schoolMemberId);
+        System.out.println(schoolMemberDTO.get().getUserAccount().getEmail());
+        return  (schoolMemberDTO.isPresent() && schoolMemberDTO.get().getSchool().getId().equals(schoolId));
+    }
+
 
 
 }

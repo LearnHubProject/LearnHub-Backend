@@ -30,5 +30,15 @@ public class ClassMember {
         this.schoolMember = schoolMember;
     }
 
+    public Long getId() {
+        return id;
+    }
 
+    public Class getaClass() {
+        return aClass;
+    }
+
+    public SchoolMember getSchoolMember() {
+        return schoolMember;
+    }
 }

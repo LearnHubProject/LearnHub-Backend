@@ -25,23 +25,23 @@ public class UserService {
     PasswordEncoder encoder;
 
     @Transactional
-    public UserAccount createUser(String email, String password, String role) throws UserAlreadyExistAuthenticationException{
+    public UserAccount createUser(String email, String password, Long personalCode, String role) throws UserAlreadyExistAuthenticationException{
 
         if (userAccountsRepository.existsByEmail(email)){
             throw new UserAlreadyExistAuthenticationException("User with this email already exists.");
         }
 
-        UserAccount userAccount = new UserAccount(email);
-        userAccountsRepository.save(userAccount);
+        UserAccount userAccount = new UserAccount(email, personalCode);
+        userAccount = userAccountsRepository.save(userAccount);
         UserCredentials userCredentials = new UserCredentials(userAccount, encoder.encode(password), role);
-        userCredentialsRepository.save(userCredentials);
+        userCredentials = userCredentialsRepository.save(userCredentials);
         return  userAccount;
 
     }
 
     public UserCredentials getUserCredentialsByEmail(String email){
         UserAccount userAccount = userAccountsRepository.findByEmail(email);
-        return userCredentialsRepository.findById(userAccount.id).get();
+        return userCredentialsRepository.findById(userAccount.getId()).get();
     }
 
     public UserDetailsDTO getUserAccountByEmail(String email){

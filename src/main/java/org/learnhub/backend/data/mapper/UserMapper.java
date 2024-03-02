@@ -6,7 +6,7 @@ import org.learnhub.backend.database.entity.UserAccount;
 public class UserMapper {
 
     public static UserDetailsDTO UserAccountToUserDetails(UserAccount userAccount){
-        return new UserDetailsDTO(userAccount.id, userAccount.email);
+        return new UserDetailsDTO(userAccount.getId(), userAccount.getEmail(), userAccount.getPersonalCode());
     }
 
 }

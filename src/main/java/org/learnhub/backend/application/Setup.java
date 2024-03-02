@@ -49,7 +49,7 @@ public class Setup implements CommandLineRunner {
         String adminUsername = "admin@"+emailDomain;
         String adminPassword = defaultPassword;
 
-        userService.createUser(adminUsername, adminPassword, "ADMIN");
+        userService.createUser(adminUsername, adminPassword, 0L,"ADMIN");
 
         String adminDetails = "\n\n\n" +
                 String.format("Admin Login: %s\n", adminUsername) +

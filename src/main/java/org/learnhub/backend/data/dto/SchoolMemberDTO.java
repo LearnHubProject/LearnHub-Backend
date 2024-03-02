@@ -6,14 +6,20 @@ public class SchoolMemberDTO {
 
     Long id;
 
-    SchoolRole role;
+    SchoolDetailsDTO school;
 
+    SchoolRole role;
     UserDetailsDTO userAccount;
 
-    public SchoolMemberDTO(Long id, SchoolRole role, UserDetailsDTO userAccount) {
+    public SchoolMemberDTO(Long id, SchoolDetailsDTO school, SchoolRole role, UserDetailsDTO userAccount) {
         this.id = id;
+        this.school = school;
         this.role = role;
         this.userAccount = userAccount;
+    }
+
+    public SchoolDetailsDTO getSchool() {
+        return school;
     }
 
     public Long getId() {
