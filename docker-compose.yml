@@ -13,7 +13,7 @@ services:
     ports:
       - "3306:3306"
 
-  learhub:
+  learnhub:
     depends_on:
       - database
     build:
